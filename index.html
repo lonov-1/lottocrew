@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LottoCrew</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#f4f6fb;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:20px;
+}
+
+header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.logo{
+font-size:24px;
+font-weight:bold;
+color:#4A6CF7;
+}
+
+button{
+background:#4A6CF7;
+border:none;
+color:white;
+padding:10px 16px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.pool{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 4px 15px rgba(0,0,0,0.05);
+}
+
+input,select{
+padding:8px;
+margin:5px 0;
+width:100%;
+}
+
+.generator{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-top:30px;
+}
+
+.result{
+margin-top:10px;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+
+<div class="logo">LottoCrew</div>
+
+<button onclick="showCreatePool()">Create Pool</button>
+
+</header>
+
+
+<h2>Public Pools</h2>
+
+<div id="pools"></div>
+
+
+<div id="createPool" style="display:none">
+
+<h3>Create Pool</h3>
+
+<input id="poolName" placeholder="Pool Name">
+
+<select id="lottery">
+
+<option value="eurojackpot">Eurojackpot</option>
+<option value="lotto645">Lotto 6 aus 45</option>
+
+</select>
+
+<button onclick="createPool()">Create</button>
+
+</div>
+
+
+<div class="generator">
+
+<h3>Lotto Generator</h3>
+
+<select id="generatorType">
+
+<option value="eurojackpot">Eurojackpot</option>
+<option value="lotto645">Lotto 6 aus 45</option>
+
+</select>
+
+<button onclick="generate()">Generate Numbers</button>
+
+<div class="result" id="result"></div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+let pools = [
+
+{name:"Vienna Lotto Pool",members:12,max:50},
+
+{name:"Eurojackpot Community",members:34,max:100}
+
+]
+
+
+function renderPools(){
+
+const container = document.getElementById("pools")
+
+container.innerHTML=""
+
+pools.forEach((pool,i)=>{
+
+container.innerHTML+=`
+
+<div class="pool">
+
+<h3>${pool.name}</h3>
+
+<p>Members: ${pool.members}/${pool.max}</p>
+
+<button onclick="joinPool(${i})">Join Pool</button>
+
+</div>
+
+`
+
+})
+
+}
+
+renderPools()
+
+function joinPool(i){
+
+pools[i].members++
+
+renderPools()
+
+}
+
+function showCreatePool(){
+
+document.getElementById("createPool").style.display="block"
+
+}
+
+function createPool(){
+
+let name=document.getElementById("poolName").value
+
+if(!name) return
+
+pools.push({
+
+name:name,
+
+members:1,
+
+max:50
+
+})
+
+renderPools()
+
+}
+
+
+function generate(){
+
+let type=document.getElementById("generatorType").value
+
+if(type==="eurojackpot"){
+
+let numbers=new Set()
+
+let euro=new Set()
+
+while(numbers.size<5){
+
+numbers.add(Math.floor(Math.random()*50)+1)
+
+}
+
+while(euro.size<2){
+
+euro.add(Math.floor(Math.random()*12)+1)
+
+}
+
+document.getElementById("result").innerText=
+
+[...numbers].join(" ")+" | Euro: "+[...euro].join(" ")
+
+}
+
+if(type==="lotto645"){
+
+let numbers=new Set()
+
+while(numbers.size<6){
+
+numbers.add(Math.floor(Math.random()*45)+1)
+
+}
+
+document.getElementById("result").innerText=
+
+[...numbers].join(" ")
+
+}
+
+}
+
+</script>
+
+
+</body>
+
+</html>
